@@ -56,6 +56,15 @@ def get_dctmtx(n):
     return C
 
 
+def normalize_img_channel(img_channel):
+    """
+    Normalizes img_channel (2D matrix) if it is not divisible by 8
+    """
+    # todo implement
+    pass
+
+
+
 def divide_into_block(n, img_channel):
     """
     Divides 2D matrix into n x n blocks (np.arrays)

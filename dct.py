@@ -1,10 +1,24 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+import pprint
 
 from math import cos, sqrt, pi
 
-img = cv.imread("panda_grayscale.png")
+img = cv.imread("mona_liza.jpeg")
+
+# Split into 3 color channels
+B, G, R = cv.split(img)
+
+# Merge 3 channels back
+
+
+img = cv.merge([R, G, B])
+#plt.imshow(img)
+#plt.show()
+
+
+
 
 
 def rgb2ycbcr(im):
@@ -40,6 +54,34 @@ def get_dctmtx(n):
         for v in range(n):
             C[u, v] = round(calculate_dctmtx_entry(u, v, n), 2)
     return C
+
+
+def divide_into_block(n, img_channel):
+    """
+    Divides 2D matrix into n x n blocks (np.arrays)
+
+    :param n: divide into n x n slices
+    :param img_channel: 2D matrix
+    :return: list of lists of n x n blocks
+    """
+    sliced = np.split(img_channel, n, axis=0)
+    blocks = [np.split(img_slice, n, axis=1) for img_slice in sliced]
+    return blocks
+
+
+def group_blocks_together(blocks):
+    """
+    Groups n x n blocks (np.arrays) back to 2D matrix
+
+    :param blocks: list of lists of n x n blocks
+    :return: 2D matrix of grouped blocks
+    """
+
+    img_stacked = np.block(blocks)
+    return img_stacked
+
+
+
 
 
 #print(get_dctmtx(8))

@@ -3,7 +3,7 @@ from quantization import get_quantization_matrix
 from math import cos, sqrt, pi
 
 
-def calculate_dctmtx_entry(u, v, n):
+def calculate_dct_matrix_entry(u, v, n):
     if u == 0:
         return sqrt(1 / n)
     else:
@@ -21,7 +21,7 @@ def get_dct_matrix(n):
 
     for u in range(n):
         for v in range(n):
-            C[u, v] = round(calculate_dctmtx_entry(u, v, n), 2)
+            C[u, v] = round(calculate_dct_matrix_entry(u, v, n), 2)
     return C
 
 
@@ -38,7 +38,7 @@ def forward_dct(blocks):
             # D = T M T'
             blocks[block_row][block_col] = np.linalg.multi_dot([DCT_T, blocks[block_row][block_col], DCT_T.transpose()])
             # Quantize using quantization matrix Q
-            blocks[block_row][block_col] = np.round(np.divide(blocks[block_row][block_col], Q)) + 0
+            blocks[block_row][block_col] = np.round(np.divide(blocks[block_row][block_col], Q))
 
 
 def backwards_dct(blocks):

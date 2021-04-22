@@ -93,21 +93,23 @@ if __name__ == "__main__":
 
     decoded_channels = []
 
-    for img_channel in transformed_channels:
-        img_channel_blocks = divide_into_blocks(8, img_channel)
-        backwards_dct(img_channel_blocks)
 
-        img_channel_combined = group_blocks_together(img_channel_blocks)
-        decoded_channels.append(img_channel_combined)
 
-    # Combined Y, Cb, Cr channels to form an image
-    decoded_img_ycbcr = cv.merge(decoded_channels)
-
-    # Convert channels to RGB
-    decoded_img_rgb = ycbcr2rgb(decoded_img_ycbcr)
-    decoded_img_rgb = decoded_img_rgb.astype(np.uint8)
+    # for img_channel in transformed_channels:
+    #     img_channel_blocks = divide_into_blocks(8, img_channel)
+    #     backwards_dct(img_channel_blocks)
+    #
+    #     img_channel_combined = group_blocks_together(img_channel_blocks)
+    #     decoded_channels.append(img_channel_combined)
+    #
+    # # Combined Y, Cb, Cr channels to form an image
+    # decoded_img_ycbcr = cv.merge(decoded_channels)
+    #
+    # # Convert channels to RGB
+    # decoded_img_rgb = ycbcr2rgb(decoded_img_ycbcr)
+    # decoded_img_rgb = decoded_img_rgb.astype(np.uint8)
 
     # Show img
-    plt.imsave("./lsd.jpg", decoded_img_rgb)
-    plt.imshow(decoded_img_rgb)
-    plt.show()
+    # plt.imsave("./lsd.jpg", decoded_img_rgb)
+    # plt.imshow(decoded_img_rgb)
+    # plt.show()

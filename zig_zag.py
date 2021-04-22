@@ -21,47 +21,31 @@ def zig_zag(arr):
                 k += 1
 
             elif (j == height - 1) and (i < length):
-                result[i] = arr[i, j]
+                result[k] = arr[i, j]
                 i += 1
                 k += 1
 
             elif (i > length) and (j < height - 1):
-                result[i] = arr[i, j]
+                result[k] = arr[i, j]
                 i += 1
                 j += 1
                 k += 1
 
         else:
             # going down
-
-            if (v == vmax - 1) and (h <= hmax - 1):  # if we got to the last line
-
-                # print(4)
-
-                output[i] = arr[v, h]
-
-                h = h + 1
-
-                i = i + 1
-
-
-            elif (h == hmin):  # if we got to the first column
-
-                # print(5)
-
-                output[i] = arr[v, h]
-
-                if v == vmax - 1:
-
-                    h = h + 1
-
+            if (j == length - 1) and (j <= height - 1):
+                result[k] = arr[i, j]
+                j += 1
+                k += 1
+            elif j == height:
+                result[k] = arr[i, j]
+                if i == length - 1:
+                    j += 1
                 else:
+                    i += 1
+                k += 1
 
-                    v = v + 1
-
-                i = i + 1
-
-            elif (v < vmax - 1) and (h > hmin):
+            elif (i < length - 1) and (j > height):
                 result[k] = arr[i, j]
                 i += 1
                 j += 1

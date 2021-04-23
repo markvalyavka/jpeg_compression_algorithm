@@ -2,6 +2,8 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 from dct import forward_dct, backwards_dct
+from zig_zag import zig_zag
+from huffman_encoding import huffman_encode, huffman_decode
 
 img = cv.imread("test_files/panda_grayscale.png")
 
@@ -91,7 +93,8 @@ if __name__ == "__main__":
         img_channel_combined = group_blocks_together(img_channel_blocks)
         transformed_channels.append(img_channel_combined)
 
-    decoded_channels = []
+        zigzag_data = [zig_zag(block) for block in transformed_channels]
+        encoded_data = huffman_encode(zigzag_data)
 
 
 

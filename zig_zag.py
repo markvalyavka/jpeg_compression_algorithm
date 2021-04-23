@@ -2,6 +2,10 @@ import numpy as np
 
 
 def zig_zag(arr):
+    """
+    reorder DCT coefficients in zig-zag order by calling zigzag function
+    returns one-dimensional array
+    """
     k, i, j = 0, 0, 0
     length = len(arr[0])
     height = len(arr)

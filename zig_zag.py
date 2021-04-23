@@ -8,66 +8,33 @@ def zig_zag(arr):
 
     result = np.zeros((height * length))
     while i < length and j < height:
-        result[k] = arr[i, j]
-
-        if (i + j) % 2 == 0:
-            # going up
-            if j == 0:
-                result[k] = arr[i, j]
-                if j == height:
-                    i += 1
-                else:
-                    j += 1
-                k += 1
-
-            elif (j == height - 1) and (i < length):
-                result[k] = arr[i, j]
+        result[k] = arr[j, i]
+        if (i + j) % 2 == 0:  # going up
+            if j > 0 and i < length - 1:
                 i += 1
-                k += 1
+                j -= 1
 
-            elif (i > length) and (j < height - 1):
-                result[k] = arr[i, j]
+            elif j >= 0 and i == height - 1:
+                j += 1
+
+            elif j > 0 and i == height - 1:
+                j += 1
+
+            elif j == 0 and i <= height - 1:
                 i += 1
+        else:  # going down
+            if i > 0 and j < height - 1:
+                i -= 1
                 j += 1
-                k += 1
 
-        else:
-            # going down
-            if (j == length - 1) and (j <= height - 1):
-                result[k] = arr[i, j]
-                j += 1
-                k += 1
-            elif j == height:
-                result[k] = arr[i, j]
-                if i == length - 1:
-                    j += 1
-                else:
-                    i += 1
-                k += 1
-
-            elif (i < length - 1) and (j > height):
-                result[k] = arr[i, j]
+            elif i > 0 and j == length - 1:
                 i += 1
+
+            elif i >= 0 and j == length - 1:
+                i += 1
+
+            elif i == 0 and j <= length - 1:
                 j += 1
-                k += 1
 
-        if (i == length - 1) and (j == height - 1):
-            result[k] = arr[i, j]
-            break
-
+        k += 1
     return result
-
-
-if __name__ == '__main__':
-    array = np.array([[0, 1, 5, 6, 14, 15, 27, 28, 44, 45],
-                      [2, 4, 7, 13, 16, 26, 29, 43, 46, 63],
-                      [3, 8, 12, 17, 25, 30, 42, 47, 62, 64],
-                      [9, 11, 18, 24, 31, 41, 48, 61, 65, 78],
-                      [10, 19, 23, 32, 40, 49, 60, 66, 77, 79],
-                      [20, 22, 33, 39, 50, 59, 67, 76, 80, 89],
-                      [21, 34, 38, 51, 58, 68, 75, 81, 88, 90],
-                      [35, 37, 52, 57, 69, 74, 82, 87, 91, 96],
-                      [36, 53, 56, 70, 73, 83, 86, 92, 95, 97],
-                      [54, 55, 71, 72, 84, 85, 93, 94, 98, 99]])
-
-    print(zig_zag(array))

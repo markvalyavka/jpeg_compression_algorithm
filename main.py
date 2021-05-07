@@ -1,17 +1,21 @@
 import cv2 as cv
 import numpy as np
+import sys
+from pympler.asizeof import asizeof
 import matplotlib.pyplot as plt
 from dct import forward_dct, backwards_dct
-from zig_zag import zig_zag
-from huffman_encoding import huffman_encode, huffman_decode
+from zig_zag import zig_zag, inverse_zigzag
+from huffman_encoding import huffman_encode_block, huffman_decode_block
+from dahuffman import HuffmanCodec
+
 
 img = cv.imread("test_files/panda_grayscale.png")
-
 IMG_WIDTH = len(img[0])
 IMG_HEIGHT = len(img)
 
 # Split into 3 color channels
 B, G, R = cv.split(img)
+
 
 # Merge 3 channels back
 img = cv.merge([R, G, B])
@@ -85,34 +89,98 @@ if __name__ == "__main__":
     # Holds Cr_t, Cb_t, Y_t transformed channels
     # ready for Huffman encoding
     transformed_channels = []
+    block_rows_num, block_cols_num = 0, 0
 
+    # -----------------------------------------------
+    # 1. Tranform color channel from RGB to CrCbY
+    # -----------------------------------------------
     for img_channel in [Cr, Cb, Y]:
         img_channel_blocks = divide_into_blocks(8, img_channel)
+
+        # -----------------------------------------------
+        # 2. Perform DCT and Quantize
+        # -----------------------------------------------
         forward_dct(img_channel_blocks)
+        block_rows_num = len(img_channel_blocks)
+        block_cols_num = len(img_channel_blocks[0])
 
         img_channel_combined = group_blocks_together(img_channel_blocks)
         transformed_channels.append(img_channel_combined)
 
-        zigzag_data = [zig_zag(block) for block in transformed_channels]
-        encoded_data = huffman_encode(zigzag_data)
+    encoded_data = []
 
+    for tranformed_channel in transformed_channels:
+        channel_encoded_data = [[c for c in range(block_cols_num)] for r in range(block_rows_num)]
+        tranformed_channel_blocks = divide_into_blocks(8, tranformed_channel)
+        for block_row in range(len(tranformed_channel_blocks)):
+            for block_col in range(len(tranformed_channel_blocks[0])):
 
+                block = tranformed_channel_blocks[block_row][block_col]
 
-    # for img_channel in transformed_channels:
-    #     img_channel_blocks = divide_into_blocks(8, img_channel)
-    #     backwards_dct(img_channel_blocks)
-    #
-    #     img_channel_combined = group_blocks_together(img_channel_blocks)
-    #     decoded_channels.append(img_channel_combined)
-    #
-    # # Combined Y, Cb, Cr channels to form an image
-    # decoded_img_ycbcr = cv.merge(decoded_channels)
-    #
-    # # Convert channels to RGB
-    # decoded_img_rgb = ycbcr2rgb(decoded_img_ycbcr)
-    # decoded_img_rgb = decoded_img_rgb.astype(np.uint8)
+                # -----------------------------------------------
+                # 3. Zigzag each of 8x8 blocks separately
+                # -----------------------------------------------
+                zigzagged_block = zig_zag(block)
 
-    # Show img
-    # plt.imsave("./lsd.jpg", decoded_img_rgb)
-    # plt.imshow(decoded_img_rgb)
-    # plt.show()
+                # -----------------------------------------------
+                # 4. Encode each of 8x8 blocks separately
+                # -----------------------------------------------
+                encoded_block = huffman_encode_block(zigzagged_block)
+                channel_encoded_data[block_row][block_col] = encoded_block
+        encoded_data.append(list(channel_encoded_data))
+
+    # -----------------------------------------
+    # For final presentation [Compare size of INPUT_DATA and COMPRESSED_DATA]
+    #print(encoded_data)
+    #print(asizeof(np.asarray(img)))
+    #print(asizeof(np.asarray(encoded_data)))
+    # ------------------------------------------
+    huffman_decoded_data = []
+
+    # -----------------------------------------------
+    # 5. Decode data by Reversing each of the steps
+    # -----------------------------------------------
+    for encoded_channel in encoded_data:
+        decoded_channel = [[c for c in range(block_cols_num)] for r in range(block_rows_num)]
+        for block_row in range(len(encoded_channel)):
+            for block_col in range(len(encoded_channel[0])):
+
+                block = encoded_channel[block_row][block_col]
+                decoded_block = huffman_decode_block(block[0], block[1])
+                unzigzagged_block = inverse_zigzag(decoded_block, 8, 8)
+                decoded_channel[block_row][block_col] = unzigzagged_block
+        huffman_decoded_data.append(group_blocks_together(decoded_channel))
+
+    # for channel in range(len(huffman_decoded_data)):
+    #     huffman_decoded_data[channel] = group_blocks_together(huffman_decoded_data[channel])
+
+    inv_dct_decoded_channels=[]
+
+    for img_channel in huffman_decoded_data:
+        img_channel_blocks = divide_into_blocks(8, img_channel)
+
+        backwards_dct(img_channel_blocks)
+
+        img_channel_combined = group_blocks_together(img_channel_blocks)
+        inv_dct_decoded_channels.append(img_channel_combined)
+
+    # Combined Y, Cb, Cr channels to form an image
+    decoded_img_ycbcr = cv.merge(inv_dct_decoded_channels)
+
+    # Convert channels to RGB
+    decoded_img_rgb = ycbcr2rgb(decoded_img_ycbcr)
+    decoded_img_rgb = decoded_img_rgb.astype(np.uint8)
+
+    # -----------------------------------------
+    # For final presentation
+    # for i in range(len(img)):
+    #     for j in range(len(img[0])):
+    #         for k in range(len(img[0][0])):
+    #             if img[i][j][k] != decoded_img_rgb[i][j][k]:
+    #                 print("fdsfd", img[i][j][k], decoded_img_rgb[i][j][k])
+    # ------------------------------------------
+
+    #Show img
+    plt.imsave("./lsd.jpg", decoded_img_rgb)
+    plt.imshow(decoded_img_rgb)
+    plt.show()

@@ -38,7 +38,7 @@ def forward_dct(blocks):
             # D = T M T'
             blocks[block_row][block_col] = np.linalg.multi_dot([DCT_T, blocks[block_row][block_col], DCT_T.transpose()])
             # Quantize using quantization matrix Q
-            blocks[block_row][block_col] = np.round(np.divide(blocks[block_row][block_col], Q))
+            blocks[block_row][block_col] = np.round(np.divide(blocks[block_row][block_col], Q), 1)
 
 
 def backwards_dct(blocks):

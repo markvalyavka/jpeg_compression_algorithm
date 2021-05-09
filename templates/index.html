@@ -1,0 +1,51 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--    <head>-->
+<!--        <meta charset="UTF-8">-->
+<!--        <title></title>-->
+<!--        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">-->
+<!--    </head>-->
+<!--    <body>-->
+<!--      <div id="box">-->
+<!--        <form action = "" method = "POST" enctype = "multipart/form-data">-->
+<!--          <input type="file" name="file" id="actual-btn" hidden/>-->
+<!--          <label for="actual-btn">Choose File</label>-->
+<!--          <span id="file-chosen">No file chosen</span>-->
+<!--        </form>-->
+
+<!--        <form method ="post" action="/">-->
+<!--          <button type="submit" name="submit" value="submit" id="done-btn">Done!</button>-->
+<!--        </form>-->
+
+<!--      </div>-->
+<!--    </body>-->
+<!--    <script>-->
+<!--      const actualBtn = document.getElementById('actual-btn');-->
+<!--      const doneBtn = document.getElementById('done-btn');-->
+<!--      const fileChosen = document.getElementById('file-chosen');-->
+
+<!--      actualBtn.addEventListener('change', function() {-->
+<!--        fileChosen.textContent = this.files[0].name;-->
+<!--        doneBtn.style.display = 'block';-->
+<!--      });-->
+<!--    </script>-->
+
+<!--&lt;!&ndash;    <script src="app"></script>&ndash;&gt;-->
+<!--    &lt;!&ndash; <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> &ndash;&gt;-->
+<!--    &lt;!&ndash; <script src="jquery-3.4.1.min.js"></script> &ndash;&gt;-->
+<!--</html>-->
+
+
+<!doctype html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <h1>File Upload</h1>
+    <form method="POST" action="" enctype="multipart/form-data">
+      <p><input type="file" name="file"></p>
+      <p><input type="submit" value="Submit"></p>
+    </form>
+  </body>
+</html>

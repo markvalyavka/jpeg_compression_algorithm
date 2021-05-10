@@ -1,7 +1,7 @@
 # jpeg_compression_algorithm
 LA course project
 
-### git prject
+### git project
 ```
 git clone https://github.com/markvalyavka/jpeg_compression_algorithm
 ```

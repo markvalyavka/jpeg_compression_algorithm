@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 import sys
-from pympler.asizeof import asizeof
+# from pympler.asizeof import asizeof
 import matplotlib.pyplot as plt
 from dct import forward_dct, backwards_dct
 from zig_zag import zig_zag, inverse_zigzag
@@ -12,20 +12,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import os
 import glob
 
-
 UPLOAD_FOLDER = './render_files'
 app = Flask(__name__)
-
-
-img = cv.imread("./test_files/panda_grayscale.png")
-IMG_WIDTH = len(img[0])
-IMG_HEIGHT = len(img)
-
-# Split into 3 color channels
-B, G, R = cv.split(img)
-
-# Merge 3 channels back
-img = cv.merge([R, G, B])
 
 
 @app.route('/')
@@ -84,6 +72,7 @@ def divide_into_blocks(n, image_channel):
     :param image_channel: 2D matrix
     :return: list of lists of n x n blocks
     """
+    # global IMG_WIDTH
     sliced = np.split(image_channel, IMG_HEIGHT // n, axis=0)
     blocks = [np.split(img_slice, IMG_WIDTH // n, axis=1) for img_slice in sliced]
     return blocks
@@ -100,7 +89,18 @@ def group_blocks_together(blocks):
     return img_stacked
 
 
-def main(img):
+def main(image):
+    img = cv.imread(image)
+    global IMG_WIDTH
+    global IMG_HEIGHT
+    IMG_WIDTH = len(img[0])
+    IMG_HEIGHT = len(img)
+
+    # Split into 3 color channels
+    B, G, R = cv.split(img)
+
+    # Merge 3 channels back
+    img = cv.merge([R, G, B])
     # Convert RGB to YCbCr
     ycbcr_img = rgb2ycbcr(img)
 
@@ -200,9 +200,9 @@ def main(img):
     # ------------------------------------------
 
     # Show img
-    plt.imsave("./image.jpeg", decoded_img_rgb)
-    plt.imshow(decoded_img_rgb)
-    plt.show()
+    plt.imsave("./output/image.jpeg", decoded_img_rgb)
+    # plt.imshow(decoded_img_rgb)
+    # plt.show()
 
 
 if __name__ == '__main__':

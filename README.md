@@ -25,5 +25,5 @@ npm install npm@latest -g
 ### http-server
 ```
 npm install --global http-server
-http-server ./app
+http-server ./jpeg_compression_algorithm
 ```

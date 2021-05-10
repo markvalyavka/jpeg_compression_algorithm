@@ -8,11 +8,11 @@ from svd_components import *
 from get_error import *
 from compare import *
 
-A = cv2.imread("assets/img2.jpg")
+A = cv2.imread("test_files/mona_liza.jpg")
 A = cv2.cvtColor(A, cv2.COLOR_BGR2GRAY)
 A_float64 = np.array(A, dtype=np.float64)
 
-k = 100
+k = 10
 
 m = np.shape(A_float64)[0]
 n = np.shape(A_float64)[1]
@@ -54,8 +54,8 @@ def app():
     error = get_error(A_float64, A_hat)
     print("Error:", error)
 
-    # cv2.imwrite('./output/original.png', A)
-    # cv2.imwrite('./output/compressed{}.png'.format(k), A_hat)
+    cv2.imwrite('./output/original.png', A)
+    cv2.imwrite('./output/compressed{}.png'.format(k), A_hat)
     return error
 
 
@@ -86,13 +86,14 @@ if __name__ == '__main__':
 
     ############################################################
     # Error K plot
-    errors = []
-    ks = []
-    for i in range(1, 300, 10):
-        k = i
-        er = app()
-        ks.append(k)
-        errors.append(er)
 
-    plt.plot(ks, errors)
-    plt.show()
+    # errors = []
+    # ks = []
+    # for i in range(1, 300, 10):
+    #     k = i
+    #     er = app()
+    #     ks.append(k)
+    #     errors.append(er)
+    #
+    # plt.plot(ks, errors)
+    # plt.show()

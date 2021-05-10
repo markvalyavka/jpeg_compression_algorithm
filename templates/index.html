@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+   <head>
+       <meta charset="UTF-8">
+       <title></title>
+       <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+   </head>
+   <body>
+     <div id="box">
+
+       <form method="POST" action="" enctype="multipart/form-data">
+        <p><input type="file" name="file" id="actual-btn" /hidden></p>
+        <label for="actual-btn">Choose File</label>
+        <span id="file-chosen">No file chosen</span>
+        
+        <p><input type="submit" value="Submit" id="done-btn"></p>
+      </form>
+
+      <a href="../output/image.jpeg" download>
+        <button id="download-btn">Download</button>
+      </a>
+
+
+     </div>
+   </body>
+   <script>
+     const actualBtn = document.getElementById('actual-btn');
+     const doneBtn = document.getElementById('done-btn');
+     const fileChosen = document.getElementById('file-chosen');
+     const downloadBtn = document.getElementById('download-btn');
+
+     actualBtn.addEventListener('change', function() {
+       fileChosen.textContent = this.files[0].name;
+       doneBtn.style.display = 'block';
+     });
+
+     doneBtn.addEventListener('change', function() {
+       doneBtn.style.display = 'none';
+       downloadBtn.style.display = 'block'
+     });
+   </script>
+</html>

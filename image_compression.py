@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import math
+from sys import getsizeof
 
 from matplotlib import pyplot as plt
 
@@ -12,13 +13,10 @@ A = cv2.imread("test_files/mona_liza.jpg")
 A = cv2.cvtColor(A, cv2.COLOR_BGR2GRAY)
 A_float64 = np.array(A, dtype=np.float64)
 
-k = 10
+k = 100
 
 m = np.shape(A_float64)[0]
 n = np.shape(A_float64)[1]
-
-print("row = ", m)
-print("col = ", n)
 
 
 def recreate_approx_image(sigma, u, v, k):
@@ -36,7 +34,6 @@ def recreate_approx_image(sigma, u, v, k):
                 A_hat[i][j] = 0
             else:
                 A_hat[i][j] = B[i][j]
-
     return A_hat
 
 
@@ -55,16 +52,28 @@ def app():
     print("Error:", error)
 
     cv2.imwrite('./output/original.png', A)
-    cv2.imwrite('./output/compressed{}.png'.format(k), A_hat)
-    return error
+    cv2.imwrite(f'./output/compressed{k}.png', A_hat)
+
+    return error, sigma
 
 
 if __name__ == '__main__':
-    app()
+    error, sig = app()
 
     #########################################################
+    # Singular Values
 
-    # plt.plot(np.cumsum(np.diag(A) / np.sum(np.diag(A))))
+    # plt.semilogy(np.diag(sig))
+    # plt.title('Singular Values')
+
+    #########################################################
+    # Cumulative Sum of The Singular Values
+    #
+    # plt.plot(np.cumsum(np.diag(sig) / np.sum(np.diag(sig))), color='red')
+    # plt.title('Cumulative Sum of The Singular Values')
+
+
+
 
     # perc_strg = []
     # x_ticks = []
@@ -74,7 +83,7 @@ if __name__ == '__main__':
     #     perc_strg.append(perc_storage(r, n, m))
     #
     # print(perc_strg)
-
+    #
     # plt.plot(x_ticks, perc_strg)
     # plt.xlabel('rank')
     # plt.ylim('% storage_required')
@@ -89,11 +98,11 @@ if __name__ == '__main__':
 
     # errors = []
     # ks = []
-    # for i in range(1, 300, 10):
+    # for i in range(1, 250, 10):
     #     k = i
-    #     er = app()
+    #     er, sig = app()
     #     ks.append(k)
     #     errors.append(er)
     #
-    # plt.plot(ks, errors)
-    # plt.show()
+    # plt.plot(ks, errors, color='green')
+    plt.show()

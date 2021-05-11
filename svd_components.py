@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 
-from image_compression import A_float64
+from svd import *
 
 
 def get_u(v, sigma):
